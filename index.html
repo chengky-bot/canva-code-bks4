@@ -20,11 +20,10 @@
 
         .form-section { border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 2rem; }
         
-        /* 側邊設定欄動畫 */
         #settingsPanel {
             transition: transform 0.3s ease-in-out;
             transform: translateX(100%);
-            font-size: 16px; /* 設定欄保持標準大小以便閱讀 */
+            font-size: 16px;
         }
         #settingsPanel.open {
             transform: translateX(0);
@@ -37,15 +36,23 @@
             display: block;
         }
 
-        /* 讓所有輸入框和選擇框繼承主字體大小 */
         input, select, button:not(.fixed) {
             font-size: inherit !important;
+        }
+
+        .custom-input-group {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen pb-10 text-gray-800 relative overflow-x-hidden">
 
-    <!-- 右上角偏好設定按鈕 (藍色正方形背景 + 白色三條水平滑桿) -->
+    <!-- 右上角偏好設定按鈕 -->
     <button onclick="toggleSettings()" class="fixed top-4 right-4 z-50 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg shadow-lg transition-transform active:scale-90 flex items-center justify-center w-12 h-12" title="偏好設定">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="4" y1="21" x2="4" y2="14"></line>
@@ -60,7 +67,6 @@
         </svg>
     </button>
 
-    <!-- 遮罩層 -->
     <div id="overlay" class="overlay fixed inset-0 z-40" onclick="toggleSettings()"></div>
 
     <!-- 偏好設定側邊欄 -->
@@ -94,12 +100,11 @@
                     </label>
                 </div>
             </div>
-            <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded">此設定僅影響目前網頁的顯示效果，方便您閱讀與操作。</p>
+            <p class="text-xs text-blue-600 bg-blue-50 p-2 rounded">此設定僅影響目前網頁的顯示效果。</p>
         </div>
     </div>
 
     <div class="max-w-3xl mx-auto px-4 pt-8">
-        <!-- 標題 -->
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-gray-800 flex items-center justify-center gap-2">
                 <span>💰</span> Canva Code 提詞產生器
@@ -108,17 +113,17 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <!-- 第一部分：基本資料 -->
+            <!-- 第一部分 -->
             <div class="form-section">
                 <h2 class="text-xl font-bold text-blue-800 mb-4 font-bold">第一部分：工具基本資料</h2>
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700">輸入你的班別與組別：</label>
-                        <input type="text" id="classInfo" placeholder="例如：4A 班第 1 組" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <input type="text" id="classInfo" placeholder="例如：4A 班第 1 組" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700">工具名稱選項：</label>
-                        <select id="toolType" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm bg-white">
+                        <select id="toolType" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
                             <option value="貨幣換算工具">A. 貨幣換算工具</option>
                             <option value="計算機工具">B. 計算機工具</option>
                         </select>
@@ -126,25 +131,33 @@
                 </div>
             </div>
 
-            <!-- 第二部分：外觀風格 -->
+            <!-- 第二部分 -->
             <div class="form-section">
                 <h2 class="text-xl font-bold text-blue-800 mb-4 font-bold">第二部分：外觀風格</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">背景顏色：</label>
-                        <select id="bgColor" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                        <select id="bgColor" onchange="toggleCustomInput('bgColor', 'customBgGroup')" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
                             <option value="White light mode">A. 白色亮色模式</option>
                             <option value="Dark blue gradient">B. 深藍色漸層</option>
                             <option value="Green theme">C. 綠色</option>
+                            <option value="custom">D. 其他 (自行輸入)</option>
                         </select>
+                        <div id="customBgGroup" class="custom-input-group mt-2">
+                            <input type="text" id="customBgColor" placeholder="請輸入顏色描述" class="w-full px-3 py-2 border-b-2 border-blue-400 outline-none bg-blue-50">
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">主要強調顏色 (按鈕)：</label>
-                        <select id="accentColor" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                        <select id="accentColor" onchange="toggleCustomInput('accentColor', 'customAccentGroup')" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
                             <option value="Blue">A. 藍色</option>
                             <option value="Pink">B. 粉紅色</option>
                             <option value="Yellow">C. 黃色</option>
+                            <option value="custom">D. 其他 (自行輸入)</option>
                         </select>
+                        <div id="customAccentGroup" class="custom-input-group mt-2">
+                            <input type="text" id="customAccentColor" placeholder="請輸入顏色描述" class="w-full px-3 py-2 border-b-2 border-blue-400 outline-none bg-blue-50">
+                        </div>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-2">整體工具風格：</label>
@@ -160,16 +173,34 @@
             <!-- 第三部分：邏輯處理 -->
             <div class="form-section">
                 <h2 class="text-xl font-bold text-blue-800 mb-4 font-bold">第三部分：輸入 → 處理 → 輸出</h2>
-                <div class="space-y-4">
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">輸入：用戶可以輸入什麼幣？</label>
+                            <select id="inputCurrency" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                                <option value="HKD (港幣)">A. 港幣</option>
+                                <option value="CNY (人民幣)">B. 人民幣</option>
+                                <option value="SGD (新加坡幣)">C. 新加坡幣</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">輸出：自動顯示什麼幣結果？</label>
+                            <select id="outputCurrency" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                                <option value="HKD (港幣)">A. 港幣</option>
+                                <option value="CNY (人民幣)" selected>B. 人民幣</option>
+                                <option value="SGD (新加坡幣)">C. 新加坡幣</option>
+                            </select>
+                        </div>
+                    </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700">目前的匯率 (1 港幣兌換多少人民幣？)：</label>
-                        <input type="number" id="exchangeRate" step="0.0001" placeholder="請在此輸入匯率 (例如 0.92)" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                        <p class="text-xs text-blue-600 mt-2 font-medium">💡 提示：請先上網搜尋「HKD to CNY」匯率再填寫數字。</p>
+                        <label class="block text-sm font-bold text-gray-700">目前的匯率 (1 單位輸入幣兌換多少輸出幣？)：</label>
+                        <input type="number" id="exchangeRate" step="0.0001" placeholder="例如 0.92" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm outline-none">
+                        <p class="text-xs text-blue-600 mt-2 font-medium">💡 提示：請先上網搜尋匯率再填寫數字。</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 第四部分：額外設定 -->
+            <!-- 第四部分 -->
             <div class="form-section">
                 <h2 class="text-xl font-bold text-blue-800 mb-4 font-bold">第四部分：快速按鈕與額外文字</h2>
                 <div class="space-y-4">
@@ -191,22 +222,17 @@
                 </div>
             </div>
 
-            <!-- 生成按鈕 -->
             <button onclick="generatePrompt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg transform active:scale-95 transition-all text-xl mt-4 flex items-center justify-center gap-2">
                 <span>🚀</span> 生成我的 Canva 提詞
             </button>
         </div>
 
-        <!-- 結果顯示區 -->
         <div id="resultArea" class="hidden bg-white rounded-xl shadow-md p-6 border-2 border-yellow-400 mb-10">
             <h3 class="text-lg font-bold text-gray-800 mb-2 font-bold">你的 Canva Code 提詞已準備好：</h3>
             <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm font-mono text-gray-700 break-words leading-relaxed border" id="promptText"></div>
             <button onclick="copyToClipboard()" id="copyBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
                 <span>📋</span> 一鍵複製提詞
             </button>
-            <p class="text-center text-sm text-gray-500 mt-4 italic font-medium text-orange-600">
-                複製後，請貼到 Canva 的 Code 應用程式中按下「生成代碼」。
-            </p>
         </div>
     </div>
 
@@ -218,50 +244,59 @@
             overlay.classList.toggle('show');
         }
 
-        // 即時更新網頁字體大小
         function updatePageFontSize(size) {
             document.documentElement.style.setProperty('--app-font-size', size);
+        }
+
+        function toggleCustomInput(selectId, targetGroupId) {
+            const select = document.getElementById(selectId);
+            const group = document.getElementById(targetGroupId);
+            group.style.display = select.value === 'custom' ? 'block' : 'none';
         }
 
         function generatePrompt() {
             const classInfo = document.getElementById('classInfo').value || "學生";
             const toolType = document.getElementById('toolType').value;
-            const bgColor = document.getElementById('bgColor').value;
-            const accentColor = document.getElementById('accentColor').value;
             const uiStyle = document.getElementById('uiStyle').value;
             const rate = document.getElementById('exchangeRate').value;
             const resetLabel = document.getElementById('resetBtnLabel').value;
             const copyright = document.getElementById('copyright').value;
+            const inputCur = document.getElementById('inputCurrency').value;
+            const outputCur = document.getElementById('outputCurrency').value;
+
+            let bgColor = document.getElementById('bgColor').value;
+            if (bgColor === 'custom') bgColor = document.getElementById('customBgColor').value || "Custom";
+
+            let accentColor = document.getElementById('accentColor').value;
+            if (accentColor === 'custom') accentColor = document.getElementById('customAccentColor').value || "Custom";
 
             if (!rate) {
                 alert("請先輸入目前的匯率數字喔！");
                 return;
             }
 
-            // 組合 Prompt (回歸純淨的換算器提詞)
             const prompt = `Create a functional web app in a single file (HTML/CSS/JS) for Canva. 
 Title: "${classInfo} ${toolType}".
 
-Language Requirement:
-- IMPORTANT: All UI text, labels, buttons, and messages MUST be in Traditional Chinese (繁體中文).
+Language: Traditional Chinese (繁體中文).
 
-Design Requirements:
+Design:
 - Visual Style: ${uiStyle}.
-- Background Theme: ${bgColor}.
-- Primary Accent Color: ${accentColor} (apply to buttons and interactive elements).
-- Layout: Modern, clean, and mobile-friendly with large touch targets.
+- Background: ${bgColor}.
+- Accent Color: ${accentColor}.
+- Layout: Mobile-friendly with large buttons.
 
-Core Functionality (Interface in Traditional Chinese):
-- Implement a bi-directional currency converter between HKD (港幣) and CNY (人民幣).
-- Use this Exchange Rate: 1 HKD = ${rate} CNY.
-- Logic: The conversion should update in real-time as the user types.
-- Navigation: Add a "swap" arrow icon button to switch input directions (HKD->CNY or CNY->HKD).
-- Quick Selection: Add shortcut buttons for these amounts: 10, 50, 100, 500, 1000, 5000.
-- Action Button: Include a functional button labeled "${resetLabel}" that clears all user inputs.
+Core Logic:
+- Bi-directional currency converter between ${inputCur} and ${outputCur}.
+- Base Exchange Rate: 1 ${inputCur.split(' ')[0]} = ${rate} ${outputCur.split(' ')[0]}.
+- Real-time conversion as the user types.
+- Feature: A "swap" arrow button to toggle conversion direction.
+- Shortcut Buttons: 10, 50, 100, 500, 1000, 5000.
+- Clear Button: Labeled "${resetLabel}".
 
-Footer Information (in Traditional Chinese):
-- Warning Message: "匯率僅供參考，實際交易請以銀行報價為準。"
-- Copyright Text: "© 2026 ${copyright}".`;
+Footer:
+- Warning: "匯率僅供參考，實際交易請以銀行報價為準。"
+- Copyright: "© 2026 ${copyright}".`;
 
             document.getElementById('promptText').innerText = prompt;
             document.getElementById('resultArea').classList.remove('hidden');
@@ -274,21 +309,12 @@ Footer Information (in Traditional Chinese):
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                const btn = document.getElementById('copyBtn');
-                btn.innerHTML = '✅ 已成功複製！';
-                btn.classList.replace('bg-green-600', 'bg-green-500');
-                
-                setTimeout(() => {
-                    btn.innerHTML = '<span>📋</span> 一鍵複製提詞';
-                    btn.classList.replace('bg-green-500', 'bg-green-600');
-                }, 2000);
-            } catch (err) {
-                alert('複製失敗，請手動全選文字複製。');
-            }
+            document.execCommand('copy');
             document.body.removeChild(textArea);
+            
+            const btn = document.getElementById('copyBtn');
+            btn.innerHTML = '✅ 已成功複製！';
+            setTimeout(() => btn.innerHTML = '<span>📋</span> 一鍵複製提詞', 2000);
         }
     </script>
 </body>
