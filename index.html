@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canva Code 提詞產生器 (貨幣換算工具)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .form-section { border-left: 4px solid #3b82f6; padding-left: 1rem; margin-bottom: 2rem; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-10 text-gray-800">
+
+    <div class="max-w-2xl mx-auto px-4 pt-8">
+        <!-- 標題 -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 flex items-center justify-center gap-2">
+                <span>💰</span> Canva Code 提詞產生器
+            </h1>
+            <p class="text-gray-600 mt-2 font-medium">請根據工作紙的內容，在下面選出你的設計選項。</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <!-- 第一部分：基本資料 -->
+            <div class="form-section">
+                <h2 class="text-xl font-bold text-blue-800 mb-4">第一部分：工具基本資料</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">輸入你的班別與組別：</label>
+                        <input type="text" id="classInfo" placeholder="例如：4A 班第 1 組" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">工具名稱選項：</label>
+                        <select id="toolType" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm bg-white">
+                            <option value="貨幣換算工具">A. 貨幣換算工具</option>
+                            <option value="計算機工具">B. 計算機工具</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二部分：外觀風格 -->
+            <div class="form-section">
+                <h2 class="text-xl font-bold text-blue-800 mb-4">第二部分：外觀風格</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">背景顏色：</label>
+                        <select id="bgColor" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                            <option value="White light mode">A. 白色亮色模式</option>
+                            <option value="Dark blue gradient">B. 深藍色漸層</option>
+                            <option value="Green theme">C. 綠色</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">按鈕顏色：</label>
+                        <select id="accentColor" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                            <option value="Blue">A. 藍色</option>
+                            <option value="Pink">B. 粉紅色</option>
+                            <option value="Yellow">C. 黃色</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">整體工具風格：</label>
+                        <select id="uiStyle" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                            <option value="Cartoon and playful game style">A. 卡通遊戲</option>
+                            <option value="Modern financial app style">B. 現代金融 App</option>
+                            <option value="Nostalgic retro bank website style">C. 懷舊銀行網站</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第三部分：邏輯處理 -->
+            <div class="form-section">
+                <h2 class="text-xl font-bold text-blue-800 mb-4">第三部分：輸入 → 處理 → 輸出</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700">目前的匯率 (1 港幣兌換多少人民幣？)：</label>
+                        <input type="number" id="exchangeRate" step="0.0001" placeholder="請在此輸入匯率 (例如 0.92)" class="mt-1 block w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <p class="text-xs text-blue-600 mt-2 font-medium">💡 提示：請先上網搜尋「HKD to CNY」匯率再填寫數字。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第四部分：額外設定 -->
+            <div class="form-section">
+                <h2 class="text-xl font-bold text-blue-800 mb-4">第四部分：快速按鈕與額外文字</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">按鈕名稱：</label>
+                        <select id="resetBtnLabel" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                            <option value="清除">A. 清除</option>
+                            <option value="重設">B. 重設</option>
+                            <option value="輸入">C. 輸入</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">版權資訊：</label>
+                        <select id="copyright" class="block w-full px-3 py-3 border border-gray-300 rounded-md bg-white">
+                            <option value="HCWMC">A. HCWMC</option>
+                            <option value="HSBC">B. HSBC</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生成按鈕 -->
+            <button onclick="generatePrompt()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg transform active:scale-95 transition-all text-xl mt-4 flex items-center justify-center gap-2">
+                <span>🚀</span> 生成我的 Canva 提詞
+            </button>
+        </div>
+
+        <!-- 結果顯示區 -->
+        <div id="resultArea" class="hidden bg-white rounded-xl shadow-md p-6 border-2 border-yellow-400 mb-10">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">你的 Canva Code 提詞已準備好：</h3>
+            <div class="bg-gray-100 p-4 rounded-lg mb-4 text-sm font-mono text-gray-700 break-words leading-relaxed" id="promptText"></div>
+            <button onclick="copyToClipboard()" id="copyBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                <span>📋</span> 一鍵複製提詞
+            </button>
+            <p class="text-center text-sm text-gray-500 mt-4 italic font-medium text-orange-600">
+                複製後，請貼到 Canva 的 Code 應用程式中按下「生成代碼」。
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const classInfo = document.getElementById('classInfo').value || "學生";
+            const toolType = document.getElementById('toolType').value;
+            const bgColor = document.getElementById('bgColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+            const uiStyle = document.getElementById('uiStyle').value;
+            const rate = document.getElementById('exchangeRate').value;
+            const resetLabel = document.getElementById('resetBtnLabel').value;
+            const copyright = document.getElementById('copyright').value;
+
+            if (!rate) {
+                alert("請先輸入目前的匯率數字喔！");
+                return;
+            }
+
+            // 組合 Prompt
+            const prompt = `Create a functional web app in a single file (HTML/CSS/JS) for Canva. 
+Title: "${classInfo} ${toolType}".
+
+Language Requirement:
+- IMPORTANT: All UI text, labels, buttons, and messages MUST be in Traditional Chinese (繁體中文).
+
+Design Requirements:
+- Visual Style: ${uiStyle}.
+- Background Theme: ${bgColor}.
+- Primary Accent Color: ${accentColor} (apply to buttons and interactive elements).
+- Layout: Modern, clean, and mobile-friendly with large touch targets and readable fonts.
+
+Core Functionality (Interface in Traditional Chinese):
+- Implement a bi-directional currency converter between HKD (港幣) and CNY (人民幣).
+- Use this Exchange Rate: 1 HKD = ${rate} CNY.
+- Logic: The conversion should update in real-time as the user types.
+- Navigation: Add a "swap" arrow icon button to switch input directions (HKD->CNY or CNY->HKD).
+- Quick Selection: Add shortcut buttons for these amounts: 10, 50, 100, 500, 1000, 5000.
+- Action Button: Include a functional button labeled "${resetLabel}" that clears all user inputs.
+
+Footer Information (in Traditional Chinese):
+- Warning Message: "匯率僅供參考，實際交易請以銀行報價為準。"
+- Copyright Text: "© 2026 ${copyright}".`;
+
+            document.getElementById('promptText').innerText = prompt;
+            document.getElementById('resultArea').classList.remove('hidden');
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('promptText').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copyBtn');
+                btn.innerHTML = '✅ 已成功複製！';
+                btn.classList.replace('bg-green-600', 'bg-green-500');
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<span>📋</span> 一鍵複製提詞';
+                    btn.classList.replace('bg-green-500', 'bg-green-600');
+                }, 2000);
+            } catch (err) {
+                alert('複製失敗，請手動全選文字複製。');
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
